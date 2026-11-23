@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Permissions | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
+
+        <div th:replace="~{fragments/topbar :: topbar('Role Permissions')}"></div>
+
+        <section class="page-content">
+
+            <div class="welcome-row">
+
+                <div>
+                    <h2 th:text="${role.roleName}">Role Name</h2>
+
+                    <p class="muted">
+                        View and manage permissions assigned to this role.
+                    </p>
+                </div>
+
+                <div class="date-chip">
+                    <span>Role Type</span>
+
+                    <strong th:if="${role.systemRole}">
+                        System Role
+                    </strong>
+
+                    <strong th:unless="${role.systemRole}">
+                        Custom Role
+                    </strong>
+                </div>
+
+            </div>
+
+            <div th:if="${successMessage}"
+                 class="alert alert-success"
+                 th:text="${successMessage}">
+            </div>
+
+            <div th:if="${errorMessage}"
+                 class="alert alert-error"
+                 th:text="${errorMessage}">
+            </div>
+
+            <div th:if="${protectedRole}" class="alert alert-error">
+                This is a protected system role. Its permission assignments
+                can be viewed but cannot be modified here.
+            </div>
+
+            <section class="stats-grid stats-grid-compact">
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-blue">✓</div>
+                    <div class="stat-label">Assigned Permissions</div>
+
+                    <div class="stat-value"
+                         th:text="${#lists.size(assignedPermissions)}">
+                        0
+                    </div>
+
+                    <div class="stat-foot">
+                        Permissions currently assigned
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-green">+</div>
+                    <div class="stat-label">Available Permissions</div>
+
+                    <div class="stat-value"
+                         th:text="${#lists.size(availablePermissions)}">
+                        0
+                    </div>
+
+                    <div class="stat-foot">
+                        Permissions available to assign
+                    </div>
+                </article>
+
+            </section>
+
+            <section class="panel table-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Assigned Permissions</h3>
+                        <p class="muted">
+                            Permissions currently granted to this role.
+                        </p>
+                    </div>
+
+                    <span class="small-tag"
+                          th:text="${#lists.size(assignedPermissions)} + ' Assigned'">
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Permission Code</th>
+                            <th>Permission Name</th>
+                            <th>Module</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="mapping : ${assignedPermissions}">
+
+                            <td>
+                                <strong th:text="${mapping.permission.permissionCode}"></strong>
+                            </td>
+
+                            <td th:text="${mapping.permission.permissionName}"></td>
+
+                            <td th:text="${mapping.permission.moduleName}"></td>
+
+                            <td th:text="${mapping.permission.description ?: '-'}"></td>
+
+                            <td class="action-cell">
+
+                                <form th:if="${!protectedRole}"
+                                      th:action="@{/admin/permissions/roles/{id}/remove(id=${role.id})}"
+                                      method="post"
+                                      class="inline-form"
+                                      onsubmit="return confirm('Remove this permission from the role?');">
+
+                                    <input type="hidden"
+                                           name="permissionId"
+                                           th:value="${mapping.permission.id}">
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-small">
+                                        Remove
+                                    </button>
+
+                                </form>
+
+                                <span th:if="${protectedRole}"
+                                      class="status-badge status-late">
+                                    Protected
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(assignedPermissions)}">
+                            <td colspan="5" class="empty-state">
+                                No permissions assigned to this role yet.
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+            <section class="panel" th:unless="${protectedRole}">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Assign New Permission</h3>
+                        <p class="muted">
+                            Select an available permission to grant access.
+                        </p>
+                    </div>
+
+                    <span class="small-tag">Custom Role</span>
+                </div>
+
+                <form th:action="@{/admin/permissions/roles/{id}/assign(id=${role.id})}"
+                      method="post">
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label for="permissionId">
+                                Select Permission
+                            </label>
+
+                            <select id="permissionId"
+                                    name="permissionId"
+                                    required>
+
+                                <option value="">
+                                    -- Select Permission --
+                                </option>
+
+                                <option th:each="permission : ${availablePermissions}"
+                                        th:value="${permission.id}"
+                                        th:text="${permission.moduleName + ' - ' + permission.permissionCode + ' (' + permission.permissionName + ')'}">
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a th:href="@{/admin/permissions}"
+                           class="btn btn-light">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-primary"
+                                th:disabled="${#lists.isEmpty(availablePermissions)}">
+                            + Assign Permission
+                        </button>
+
+                    </div>
+
+                    <p class="muted"
+                       th:if="${#lists.isEmpty(availablePermissions)}">
+                        All active permissions have already been assigned to this role.
+                    </p>
+
+                </form>
+
+            </section>
+
+            <div style="margin-top: 20px;">
+                <a th:href="@{/admin/permissions}"
+                   class="btn btn-light">
+                    ← Back to Permissions
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

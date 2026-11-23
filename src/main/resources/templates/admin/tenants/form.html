@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management | SchoolTrack</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
+
+        <div th:replace="~{fragments/topbar :: topbar('Tenant Management')}"></div>
+
+        <section class="page-content">
+
+            <div class="page-header">
+                <div>
+                    <h1 th:text="${pageTitle}">Create School</h1>
+                    <p>Add or update school registration details.</p>
+                </div>
+
+                <a th:href="@{/admin/tenants}" class="btn btn-secondary">
+                    Back to Schools
+                </a>
+            </div>
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h2>School Information</h2>
+                </div>
+
+                <div class="card-body">
+
+                    <form th:action="${formAction}"
+                          th:object="${tenantForm}"
+                          method="post">
+
+                        <input type="hidden" th:field="*{id}">
+
+                        <!-- Global validation errors -->
+                        <div th:if="${#fields.hasGlobalErrors()}"
+                             class="alert alert-danger">
+
+                            <p th:each="error : ${#fields.globalErrors()}"
+                               th:text="${error}">
+                            </p>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tenantName">
+                                School Name <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="text"
+                                   id="tenantName"
+                                   th:field="*{tenantName}"
+                                   class="form-control"
+                                   placeholder="Enter school name"
+                                   maxlength="150"
+                                   required>
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('tenantName')}"
+                                   th:errors="*{tenantName}">
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tenantCode">
+                                School Code <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="text"
+                                   id="tenantCode"
+                                   th:field="*{tenantCode}"
+                                   class="form-control"
+                                   placeholder="Example: SCHOOL002"
+                                   maxlength="50"
+                                   required>
+
+                            <small class="text-muted">
+                                Use letters, numbers, underscores or hyphens.
+                                School codes are stored in uppercase.
+                            </small>
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('tenantCode')}"
+                                   th:errors="*{tenantCode}">
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address</label>
+
+                            <textarea id="address"
+                                      th:field="*{address}"
+                                      class="form-control"
+                                      rows="3"
+                                      maxlength="500"
+                                      placeholder="Enter school address"></textarea>
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('address')}"
+                                   th:errors="*{address}">
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactEmail">Contact Email</label>
+
+                            <input type="email"
+                                   id="contactEmail"
+                                   th:field="*{contactEmail}"
+                                   class="form-control"
+                                   maxlength="150"
+                                   placeholder="school@example.com">
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('contactEmail')}"
+                                   th:errors="*{contactEmail}">
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactPhone">Contact Phone</label>
+
+                            <input type="text"
+                                   id="contactPhone"
+                                   th:field="*{contactPhone}"
+                                   class="form-control"
+                                   maxlength="15"
+                                   placeholder="Enter contact phone number">
+
+                            <small class="text-danger"
+                                   th:if="${#fields.hasErrors('contactPhone')}"
+                                   th:errors="*{contactPhone}">
+                            </small>
+                        </div>
+
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn btn-primary">
+                                <span th:text="${tenantForm.id == null
+                                    ? 'Create School'
+                                    : 'Update School'}">
+                                    Save School
+                                </span>
+                            </button>
+
+                            <a th:href="@{/admin/tenants}"
+                               class="btn btn-secondary">
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar('Students')}"></div>
+
+        <section class="page-content">
+            <div class="page-heading">
+                <div>
+                    <h2>Student Management</h2>
+                    <p class="muted">Manage student records and enrollment.</p>
+                </div>
+                <a class="btn btn-primary" th:href="@{/students/add}">＋ Add Student</a>
+            </div>
+
+            <div class="alert alert-success" th:if="${successMessage}"
+                 th:text="${successMessage}"></div>
+            <div class="alert alert-error" th:if="${errorMessage}"
+                 th:text="${errorMessage}"></div>
+
+            <section class="panel">
+                <form method="get" th:action="@{/students}" class="filter-bar">
+                    <input type="search" name="keyword" placeholder="Search by name or roll number..."
+                           th:value="${keyword}">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                    <a class="btn btn-light" th:href="@{/students}">Reset</a>
+                </form>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th><th>Roll No.</th><th>Student Name</th>
+                            <th>Class</th><th>Gender</th><th>Phone</th>
+                            <th>Status</th><th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="student, stat : ${students}">
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${student.rollNo}">ST001</td>
+                            <td th:text="${student.name}">Student Name</td>
+                            <td th:text="${student.className}">10</td>
+                            <td th:text="${student.gender}">Male</td>
+                            <td th:text="${student.phone}">9999999999</td>
+                            <td>
+                                <span class="status-badge"
+                                      th:classappend="${student.active} ? ' status-present' : ' status-absent'"
+                                      th:text="${student.active} ? 'Active' : 'Inactive'">Active</span>
+                            </td>
+                            <td class="action-cell">
+                                <a class="btn btn-small btn-light"
+                                   th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a>
+                                <form th:action="@{/students/delete/{id}(id=${student.id})}"
+                                      method="post" class="inline-form"
+                                      onsubmit="return confirmDelete('Delete this student?')">
+                                    <button class="btn btn-small btn-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(students)}">
+                            <td colspan="8" class="empty-state">No student records found.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

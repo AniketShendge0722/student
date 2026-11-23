@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permissions | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
+
+        <div th:replace="~{fragments/topbar :: topbar('Permissions Management')}"></div>
+
+        <section class="page-content">
+
+            <div class="welcome-row">
+                <div>
+                    <h2>Permissions Management</h2>
+                    <p class="muted">
+                        View system permissions and manage access for custom roles.
+                    </p>
+                </div>
+
+                <div class="date-chip">
+                    <span>System</span>
+                    <strong>Super Admin</strong>
+                </div>
+            </div>
+
+            <div th:if="${successMessage}"
+                 class="alert alert-success"
+                 th:text="${successMessage}">
+            </div>
+
+            <div th:if="${errorMessage}"
+                 class="alert alert-error"
+                 th:text="${errorMessage}">
+            </div>
+
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Role Permissions</h3>
+                        <p class="muted">
+                            Select a role to view and manage its permissions.
+                        </p>
+                    </div>
+
+                    <span class="small-tag"
+                          th:text="${#lists.size(roles)} + ' Roles'">
+                    </span>
+                </div>
+
+                <div th:each="role : ${roles}"
+                     class="quick-action">
+
+                    <span class="quick-action-icon icon-blue">⚙</span>
+
+                    <span>
+                        <strong th:text="${role.roleName}"></strong>
+
+                        <small th:text="${role.description ?: 'No description available'}">
+                        </small>
+
+                        <small>
+                            <span th:if="${role.systemRole}" class="text-orange">
+                                System Role · Protected
+                            </span>
+
+                            <span th:unless="${role.systemRole}" class="text-green">
+                                Custom Role
+                            </span>
+                        </small>
+                    </span>
+
+                    <a th:href="@{/admin/permissions/roles/{id}(id=${role.id})}"
+                       class="btn btn-primary btn-small">
+                        Manage
+                    </a>
+
+                </div>
+
+                <div th:if="${#lists.isEmpty(roles)}" class="empty-state">
+                    No roles available.
+                </div>
+
+            </section>
+
+            <section class="panel table-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>All System Permissions</h3>
+                        <p class="muted">
+                            Existing permissions configured in SchoolTrack.
+                        </p>
+                    </div>
+
+                    <span class="small-tag"
+                          th:text="${#lists.size(permissions)} + ' Permissions'">
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Permission Code</th>
+                            <th>Permission Name</th>
+                            <th>Module</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="permission : ${permissions}">
+
+                            <td>
+                                <strong th:text="${permission.permissionCode}"></strong>
+                            </td>
+
+                            <td th:text="${permission.permissionName}"></td>
+
+                            <td>
+                                <span class="small-tag"
+                                      th:text="${permission.moduleName}">
+                                </span>
+                            </td>
+
+                            <td th:text="${permission.description ?: '-'}"></td>
+
+                            <td>
+                                <span th:if="${permission.active}"
+                                      class="status-badge status-present">
+                                    Active
+                                </span>
+
+                                <span th:unless="${permission.active}"
+                                      class="status-badge status-absent">
+                                    Inactive
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(permissions)}">
+                            <td colspan="5" class="empty-state">
+                                No permissions found.
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

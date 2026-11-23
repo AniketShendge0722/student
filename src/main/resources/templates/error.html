@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="error-page">
+<div class="error-card">
+    <div class="error-code">!</div>
+    <h1>Something went wrong</h1>
+    <p th:text="${message != null ? message : 'The requested operation could not be completed.'}">
+        The requested operation could not be completed.
+    </p>
+    <a th:href="@{/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="topbar(pageTitle)" class="topbar">
+
+    <div class="topbar-left">
+
+        <button class="menu-toggle"
+                type="button"
+                id="menuToggle"
+                aria-label="Toggle navigation">☰</button>
+
+        <div>
+            <h1 th:text="${pageTitle}">Dashboard</h1>
+            <p>School management system</p>
+        </div>
+
+    </div>
+
+    <div class="topbar-right">
+
+        <span class="topbar-date"
+              th:text="${#temporals.format(#temporals.createNow(), 'dd MMM yyyy')}">
+            20 Nov 2026
+        </span>
+
+        <div class="user-avatar"
+             th:text="${#strings.toUpperCase(#strings.substring(currentUsername, 0, 1))}">
+            A
+        </div>
+
+        <div class="user-info">
+
+            <strong th:text="${currentUsername}">
+                Administrator
+            </strong>
+
+            <small th:if="${selectedTenant != null}"
+                   th:text="${selectedTenant.tenantName}">
+                SchoolTrack Main School
+            </small>
+
+        </div>
+
+        <div th:if="${hasMultipleTenants}"
+             class="tenant-switcher">
+
+            <form th:action="@{/tenant/select}" method="post">
+
+                <select name="tenantId"
+                        aria-label="Switch school"
+                        required>
+
+                    <option th:each="tenant : ${availableTenants}"
+                            th:value="${tenant.id}"
+                            th:text="${tenant.tenantName}"
+                            th:selected="${selectedTenant != null and selectedTenant.id == tenant.id}">
+                    </option>
+
+                </select>
+
+                <button type="submit">
+                    Switch
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</header>
+
+</body>
+</html>

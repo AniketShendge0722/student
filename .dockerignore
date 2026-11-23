@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# Maven build output
+target/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+application-dev.properties
+application-prod-local.properties
+**/application-local.properties
+**/application-dev.properties
+**/application-prod-local.properties
+
+# Database backups and exports
+database-backup/
+db-backup/
+backups/
+*.sql
+*.sql.gz
+*.dump
+
+# Logs and temporary files
+*.log
+logs/
+temp/
+tmp/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local runtime files
+*.pid

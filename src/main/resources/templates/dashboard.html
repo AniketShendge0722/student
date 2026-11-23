@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar('Dashboard')}"></div>
+
+        <section class="page-content">
+            <div class="welcome-row">
+                <div>
+                    <h2>Good day, Administrator</h2>
+                    <p class="muted">Here's what's happening in your school today.</p>
+                </div>
+                <div class="date-chip">
+                    <span>Today</span>
+                    <strong th:text="${todayDate}">Friday, 20 Nov 2026</strong>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <div class="stat-icon icon-blue">♙</div>
+                    <div class="stat-label">Total Students</div>
+                    <div class="stat-value" th:text="${totalStudents}">0</div>
+                    <div class="stat-foot">All registered students</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-green">✓</div>
+                    <div class="stat-label">Active Students</div>
+                    <div class="stat-value" th:text="${activeStudents}">0</div>
+                    <div class="stat-foot">Currently active</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-orange">▰</div>
+                    <div class="stat-label">Total Buses</div>
+                    <div class="stat-value" th:text="${totalBuses}">0</div>
+                    <div class="stat-foot">Registered school buses</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-purple">⌖</div>
+                    <div class="stat-label">Total Routes</div>
+                    <div class="stat-value" th:text="${totalRoutes}">0</div>
+                    <div class="stat-foot">Configured routes</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-pink">♧</div>
+                    <div class="stat-label">Total Parents</div>
+                    <div class="stat-value" th:text="${totalParents}">0</div>
+                    <div class="stat-foot">Registered parent records</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-teal">▤</div>
+                    <div class="stat-label">Today's Attendance</div>
+                    <div class="stat-value" th:text="${todayAttendance}">0</div>
+                    <div class="stat-foot">Attendance records today</div>
+                </article>
+            </div>
+
+            <div class="dashboard-grid">
+                <section class="panel chart-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Today's Attendance</h3>
+                            <p class="muted">Present, absent and late students</p>
+                        </div>
+                        <span class="small-tag">Today</span>
+                    </div>
+
+                    <div class="chart-wrap">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+
+                    <div class="attendance-legend">
+                        <span><i class="legend-dot dot-present"></i>
+                            Present: <b th:text="${presentCount}">0</b></span>
+                        <span><i class="legend-dot dot-absent"></i>
+                            Absent: <b th:text="${absentCount}">0</b></span>
+                        <span><i class="legend-dot dot-late"></i>
+                            Late: <b th:text="${lateCount}">0</b></span>
+                    </div>
+                </section>
+
+                <section class="panel quick-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Quick Actions</h3>
+                            <p class="muted">Frequently used tasks</p>
+                        </div>
+                    </div>
+
+                    <a class="quick-action" th:href="@{/students/add}">
+                        <span class="quick-action-icon icon-blue">＋</span>
+                        <span><strong>Add Student</strong>
+                            <small>Register a new student</small></span>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                    <a class="quick-action" th:href="@{/attendance/add}">
+                        <span class="quick-action-icon icon-green">✓</span>
+                        <span><strong>Mark Attendance</strong>
+                            <small>Record student attendance</small></span>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                    <a class="quick-action" th:href="@{/buses}">
+                        <span class="quick-action-icon icon-orange">▰</span>
+                        <span><strong>Manage Buses</strong>
+                            <small>View school transport</small></span>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                    <a class="quick-action" th:href="@{/parents}">
+                        <span class="quick-action-icon icon-purple">♧</span>
+                        <span><strong>Manage Parents</strong>
+                            <small>View parent information</small></span>
+                        <span class="action-arrow">→</span>
+                    </a>
+                </section>
+            </div>
+
+            <section class="panel table-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Today's Attendance Records</h3>
+                        <p class="muted">Latest records for today</p>
+                    </div>
+                    <a th:href="@{/attendance}" class="text-link">View all →</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Roll Number</th>
+                            <th>Class</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${recentAttendance}">
+                            <td th:text="${item.student != null ? item.student.name : '-'}">Student</td>
+                            <td th:text="${item.student != null ? item.student.rollNo : '-'}">R001</td>
+                            <td th:text="${item.student != null ? item.student.className : '-'}">10</td>
+                            <td th:text="${item.date}">2026-11-20</td>
+                            <td>
+                                <span class="status-badge"
+                                      th:classappend="${item.status != null ? ' status-' + #strings.toLowerCase(item.status.name()) : ''}"
+                                      th:text="${item.status}">PRESENT</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentAttendance)}">
+                            <td colspan="5" class="empty-state">
+                                No attendance records available for today.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    window.dashboardAttendance = {
+        present: /*[[${presentCount}]]*/ 0,
+        absent: /*[[${absentCount}]]*/ 0,
+        late: /*[[${lateCount}]]*/ 0
+    };
+</script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

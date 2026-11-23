@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<aside th:fragment="sidebar" class="sidebar" id="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">S</div>
+        <div>
+            <strong>SchoolTrack</strong>
+            <small>Management Portal</small>
+        </div>
+    </div>
+
+    <div class="sidebar-label">MAIN MENU</div>
+
+    <nav class="nav-menu">
+
+        <a th:href="@{/dashboard}" class="nav-link">
+            <span class="nav-icon">▦</span>
+            Dashboard
+        </a>
+
+        <a th:href="@{/students}" class="nav-link">
+            <span class="nav-icon">♙</span>
+            Students
+        </a>
+
+        <a th:href="@{/parents}" class="nav-link">
+            <span class="nav-icon">♧</span>
+            Parents
+        </a>
+
+        <a th:href="@{/attendance}" class="nav-link">
+            <span class="nav-icon">✓</span>
+            Attendance
+        </a>
+
+        <a th:href="@{/buses}" class="nav-link">
+            <span class="nav-icon">▰</span>
+            Buses
+        </a>
+
+        <a th:href="@{/routes}" class="nav-link">
+            <span class="nav-icon">⌖</span>
+            Routes
+        </a>
+
+    </nav>
+
+    <div sec:authorize="hasRole('SUPER_ADMIN')">
+
+        <div class="sidebar-label">ADMINISTRATION</div>
+
+        <nav class="nav-menu">
+
+            <a th:href="@{/admin}" class="nav-link">
+                <span class="nav-icon">⚙</span>
+                Administration
+            </a>
+
+            <a th:href="@{/admin/roles}" class="nav-link">
+                <span class="nav-icon">♙</span>
+                Roles
+            </a>
+
+            <a th:href="@{/admin/users}" class="nav-link">
+                <span class="nav-icon">♟</span>
+                User Management
+            </a>
+            <a th:href="@{/admin/permissions}">
+                Manage Permissions
+            </a>
+
+            <a th:href="@{/admin/tenants}" class="nav-link">
+                <span class="nav-icon">🏫</span>
+                Tenant Management
+            </a>
+
+        </nav>
+
+    </div>
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-label">ACCOUNT</div>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="nav-link logout-link">
+                <span class="nav-icon">⇥</span>
+                Sign out
+            </button>
+        </form>
+
+    </div>
+
+</aside>
+
+</body>
+</html>

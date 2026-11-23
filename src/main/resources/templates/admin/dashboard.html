@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
+
+        <div th:replace="~{fragments/topbar :: topbar('Administration')}"></div>
+
+        <section class="page-content">
+
+            <div class="welcome-row">
+                <div>
+                    <h2>Administration</h2>
+                    <p class="muted">
+                        Manage schools, users, roles and system permissions.
+                    </p>
+                </div>
+
+                <div class="date-chip">
+                    <span>System</span>
+                    <strong>Super Admin</strong>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-blue">▣</div>
+                    <div class="stat-label">Total Schools</div>
+                    <div class="stat-value"
+                         th:text="${overview.totalTenants}">0</div>
+                    <div class="stat-foot">
+                        Registered schools
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-green">✓</div>
+                    <div class="stat-label">Active Schools</div>
+                    <div class="stat-value"
+                         th:text="${overview.activeTenants}">0</div>
+                    <div class="stat-foot">
+                        Currently active
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-purple">♙</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value"
+                         th:text="${overview.totalUsers}">0</div>
+                    <div class="stat-foot">
+                        Registered system users
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-teal">✓</div>
+                    <div class="stat-label">Active Users</div>
+                    <div class="stat-value"
+                         th:text="${overview.activeUsers}">0</div>
+                    <div class="stat-foot">
+                        Enabled accounts
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-orange">⚙</div>
+                    <div class="stat-label">Total Roles</div>
+                    <div class="stat-value"
+                         th:text="${overview.totalRoles}">0</div>
+                    <div class="stat-foot">
+                        Available system roles
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-pink">⌑</div>
+                    <div class="stat-label">Active Roles</div>
+                    <div class="stat-value"
+                         th:text="${overview.activeRoles}">0</div>
+                    <div class="stat-foot">
+                        Currently enabled roles
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-blue">▤</div>
+                    <div class="stat-label">Permissions</div>
+                    <div class="stat-value"
+                         th:text="${overview.totalPermissions}">0</div>
+                    <div class="stat-foot">
+                        Configured permissions
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon icon-green">♧</div>
+                    <div class="stat-label">Active Memberships</div>
+                    <div class="stat-value"
+                         th:text="${overview.activeMemberships}">0</div>
+                    <div class="stat-foot">
+                        User-school role assignments
+                    </div>
+                </article>
+
+            </div>
+
+            <section class="panel" style="margin-top: 24px;">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Administration Modules</h3>
+                        <p class="muted">
+                            Central control for your SchoolTrack system.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+
+                    <div class="panel">
+                        <h3>School Management</h3>
+                        <p class="muted">
+                            Create schools, update school details and
+                            manage their active status.
+                        </p>
+                        <span class="small-tag">Coming in Stage 3.5</span>
+                    </div>
+
+                    <div class="panel">
+                        <h3>User Management</h3>
+                        <p class="muted">
+                            Create user accounts and assign users to
+                            one or more schools.
+                        </p>
+                        <span class="small-tag">Coming in Stage 3.4</span>
+                    </div>
+                    <div class="panel">
+                        <h3>Role Management</h3>
+                        <p class="muted">
+                            Create roles, update custom roles and control their active status.
+                        </p>
+
+                        <a th:href="@{/admin/roles}" class="btn btn-primary">
+                            Manage Roles
+                        </a>
+                    </div>
+
+
+                    <div class="panel">
+                        <h3>Permission Management</h3>
+
+                        <p class="muted">
+                            View system permissions and manage permission assignments
+                            for custom roles.
+                        </p>
+
+                        <a th:href="@{/admin/permissions}" class="btn btn-primary">
+                            Manage Permissions
+                        </a>
+                    </div>
+
+
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Tenant Management</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <p>
+                            Create and manage schools, update school details,
+                            and control school activation.
+                        </p>
+
+                        <a th:href="@{/admin/tenants}" class="btn btn-primary">
+                            Manage Schools
+                        </a>
+                    </div>
+                </div>
+
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

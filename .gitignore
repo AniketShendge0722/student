@@ -1,0 +1,49 @@
+
+# Maven / Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+.metadata/
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+application-dev.properties
+application-prod-local.properties
+secrets/
+*.pem
+*.key
+
+# Logs
+*.log
+logs/
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.old
+*~
+*.sql.bak
+
+# Database exports and local data
+database-backup/
+db-backup/
+backups/

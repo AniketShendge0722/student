@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buses | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar('School Buses')}"></div>
+        <section class="page-content">
+            <div class="page-heading">
+                <div><h2>Bus Management</h2><p class="muted">Manage vehicles, drivers and route assignments.</p></div>
+                <a class="btn btn-primary" th:href="@{/buses/add}">＋ Add Bus</a>
+            </div>
+
+            <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+            <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+            <form method="get" th:action="@{/buses}" class="filter-bar">
+                <input type="search" name="keyword" placeholder="Search bus number or driver..."
+                       th:value="${keyword}">
+                <button class="btn btn-primary" type="submit">Search</button>
+                <a class="btn btn-light" th:href="@{/buses}">Reset</a>
+            </form>
+
+            <section class="panel form-panel" th:if="${busDTO != null}">
+                <h3 class="form-section-title"
+                    th:text="${busDTO.id == null ? 'Add Bus' : 'Edit Bus'}">Bus Form</h3>
+                <form th:action="${busDTO.id == null ? '/buses/save' : '/buses/update/' + busDTO.id}"
+                      th:object="${busDTO}" method="post">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Bus Registration Number *</label>
+                            <input type="text" th:field="*{busNumber}"
+                                   placeholder="MH 10 CR 3451" required>
+                            <small class="field-error" th:errors="*{busNumber}"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Driver Name *</label>
+                            <input type="text" th:field="*{driverName}" required>
+                            <small class="field-error" th:errors="*{driverName}"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Driver Phone *</label>
+                            <input type="tel" th:field="*{driverPhone}" required>
+                            <small class="field-error" th:errors="*{driverPhone}"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Capacity *</label>
+                            <input type="number" min="1" th:field="*{capacity}" required>
+                            <small class="field-error" th:errors="*{capacity}"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Route</label>
+                            <select th:field="*{routeId}">
+                                <option value="">Select route</option>
+                                <option th:each="route : ${routes}"
+                                        th:value="${route.id}" th:text="${route.routeName}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <a th:href="@{/buses}" class="btn btn-light">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Bus</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr><th>#</th><th>Bus Number</th><th>Driver</th><th>Driver Phone</th><th>Capacity</th><th>Route</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="bus, stat : ${buses}">
+                            <td th:text="${stat.count}">1</td>
+                            <td><strong th:text="${bus.busNumber}">MH 10 CR 3451</strong></td>
+                            <td th:text="${bus.driverName}">Driver</td>
+                            <td th:text="${bus.driverPhone}">9999999999</td>
+                            <td th:text="${bus.capacity}">40</td>
+                            <td th:text="${bus.routeId != null ? bus.routeId : '-'}">Route</td>
+                            <td class="action-cell">
+                                <a class="btn btn-small btn-light"
+                                   th:href="@{/buses/edit/{id}(id=${bus.id})}">Edit</a>
+                                <form th:action="@{/buses/delete/{id}(id=${bus.id})}"
+                                      method="post" class="inline-form"
+                                      onsubmit="return confirmDelete('Delete this bus?')">
+                                    <button class="btn btn-small btn-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(buses)}">
+                            <td colspan="7" class="empty-state">No bus records found.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

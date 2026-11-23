@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routes | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="main-content">
+        <div th:replace="~{fragments/topbar :: topbar('Bus Routes')}"></div>
+        <section class="page-content">
+            <div class="page-heading">
+                <div><h2>Route Management</h2><p class="muted">Configure school transport routes and stops.</p></div>
+                <a class="btn btn-primary" th:href="@{/routes/add}">＋ Add Route</a>
+            </div>
+
+            <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+            <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+            <form method="get" th:action="@{/routes}" class="filter-bar">
+                <input type="search" name="keyword" placeholder="Search route..."
+                       th:value="${keyword}">
+                <button class="btn btn-primary" type="submit">Search</button>
+                <a class="btn btn-light" th:href="@{/routes}">Reset</a>
+            </form>
+
+            <section class="panel form-panel" th:if="${routeDTO != null}">
+                <h3 class="form-section-title"
+                    th:text="${routeDTO.id == null ? 'Add Route' : 'Edit Route'}">Route Form</h3>
+                <form th:action="${routeDTO.id == null ? '/routes/save' : '/routes/update/' + routeDTO.id}"
+                      th:object="${routeDTO}" method="post">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Route Name *</label>
+                            <input type="text" th:field="*{routeName}" required>
+                            <small class="field-error" th:errors="*{routeName}"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Starting Point *</label>
+                            <input type="text" th:field="*{startPoint}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ending Point *</label>
+                            <input type="text" th:field="*{endPoint}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Distance (km)</label>
+                            <input type="number" min="0" step="0.1" th:field="*{distanceKm}">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Stops</label>
+                            <textarea th:field="*{stops}" rows="3"
+                                      placeholder="Enter stops separated by commas"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <a th:href="@{/routes}" class="btn btn-light">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Route</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                        <tr><th>#</th><th>Route</th><th>Start</th><th>Destination</th><th>Stops</th><th>Distance (km)</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="route, stat : ${routes}">
+                            <td th:text="${stat.count}">1</td>
+                            <td><strong th:text="${route.routeName}">Route A</strong></td>
+                            <td th:text="${route.startPoint}">Start</td>
+                            <td th:text="${route.endPoint}">End</td>
+                            <td th:text="${route.stops}">Stops</td>
+                            <td th:text="${route.distanceKm}">10</td>
+                            <td class="action-cell">
+                                <a class="btn btn-small btn-light"
+                                   th:href="@{/routes/edit/{id}(id=${route.id})}">Edit</a>
+                                <form th:action="@{/routes/delete/{id}(id=${route.id})}"
+                                      method="post" class="inline-form"
+                                      onsubmit="return confirmDelete('Delete this route?')">
+                                    <button class="btn btn-small btn-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(routes)}">
+                            <td colspan="7" class="empty-state">No route records found.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

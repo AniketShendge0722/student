@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select School | SchoolTrack</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin: 20px 0 8px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            border: 0;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            margin: 12px 0;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .empty {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 7px;
+            color: #475569;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Select Your School</h2>
+
+    <p>
+        Select the school you want to access.
+        Your available schools depend on your assigned active memberships.
+    </p>
+
+    <div class="message error"
+         th:if="${errorMessage}"
+         th:text="${errorMessage}">
+    </div>
+
+    <div class="message success"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${not #lists.isEmpty(tenants)}">
+
+        <form th:action="@{/tenant/select}" method="post">
+
+            <label for="tenantId">Available Schools</label>
+
+            <select id="tenantId" name="tenantId" required>
+
+                <option value="">-- Select School --</option>
+
+                <option th:each="tenant : ${tenants}"
+                        th:value="${tenant.id}"
+                        th:text="${tenant.tenantName}"
+                        th:selected="${selectedTenant != null and selectedTenant.id == tenant.id}">
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Continue
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="empty"
+         th:if="${#lists.isEmpty(tenants)}">
+
+        No active school membership is assigned to your account.
+        Please contact your administrator.
+
+    </div>
+
+</div>
+
+</body>
+</html>
