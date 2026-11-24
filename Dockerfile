@@ -1,23 +1,20 @@
-# Stage 1: Build the application using Java 21 and Maven Wrapper
+
+# Stage 1: Build the application using the Maven installation in the image
 FROM maven:3.9.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-# Copy Maven Wrapper and project configuration
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+# Copy Maven project configuration
+COPY pom.xml ./
 
-# Normalize Windows line endings and make Maven Wrapper executable
-RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
-
-# Download dependencies first
-RUN ./mvnw -B dependency:go-offline
+# Download project dependencies using installed Maven
+RUN mvn -B dependency:go-offline
 
 # Copy application source code
 COPY src/ src/
 
 # Build executable Spring Boot JAR
-RUN ./mvnw -B clean package -DskipTests
+RUN mvn -B clean package -DskipTests
 
 # Copy the executable JAR to a predictable location
 RUN set -eux; \
@@ -25,8 +22,7 @@ RUN set -eux; \
     test -n "$JAR"; \
     cp "$JAR" /app/application.jar
 
-
-# Stage 2: Run the application using Java 21 JRE
+# Stage 2: Run using Java 21 JRE
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
