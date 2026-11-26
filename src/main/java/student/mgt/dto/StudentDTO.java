@@ -13,14 +13,14 @@ public class StudentDTO {
     private String name;
 
     @NotBlank(message = "Roll number is required")
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 30, message = "Roll number must be between 1 and 30 characters")
     private String rollNo;
 
-    @NotBlank(message = "Class is required")
-    @Size(max = 30)
+    @NotBlank(message = "Please select a class")
+    @Size(max = 30, message = "Class name cannot exceed 30 characters")
     private String className;
 
-
+    @NotBlank(message = "Please select gender")
     @Pattern(regexp = "Male|Female|Other",
             message = "Select a valid gender")
     private String gender;
@@ -30,17 +30,17 @@ public class StudentDTO {
     private LocalDate dob;
 
     @NotBlank(message = "Address is required")
-    @Size(max = 500)
+    @Size(max = 500, message = "Address cannot exceed 500 characters")
     private String address;
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^[6-9][0-9]{9}$",
-            message = "Enter a valid 10-digit mobile number")
+            message = "Phone number must be a valid 10-digit mobile number")
     private String phone;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Enter a valid email address")
-    @Size(max = 100)
+    @Email(message = "Please enter a valid email address")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
     private String email;
 
     @NotNull(message = "Admission date is required")

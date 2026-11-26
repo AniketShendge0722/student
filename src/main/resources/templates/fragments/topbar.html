@@ -47,11 +47,13 @@
         <div th:if="${hasMultipleTenants}"
              class="tenant-switcher">
 
-            <form th:action="@{/tenant/select}" method="post">
+            <form th:action="@{/tenant/select}" method="post" class="tenant-switcher-form" data-validate="true">
 
                 <select name="tenantId"
                         aria-label="Switch school"
+                        data-field-label="School"
                         required>
+                    <option value="" th:if="${selectedTenant == null}" selected>Select School</option>
 
                     <option th:each="tenant : ${availableTenants}"
                             th:value="${tenant.id}"
@@ -61,7 +63,7 @@
 
                 </select>
 
-                <button type="submit">
+                <button type="submit" class="btn btn-light btn-small">
                     Switch
                 </button>
 

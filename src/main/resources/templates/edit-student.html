@@ -9,40 +9,99 @@
 <body>
 <div class="app-layout">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
     <main class="main-content">
         <div th:replace="~{fragments/topbar :: topbar('Edit Student')}"></div>
 
         <section class="page-content">
             <div class="page-heading">
-                <div><h2>Edit Student</h2><p class="muted">Update student information.</p></div>
-                <a class="btn btn-light" th:href="@{/students}">← Back to Students</a>
+                <div>
+                    <h2>Edit Student</h2>
+                    <p class="muted">Update student information. Fields marked with <span class="required-mark">*</span> are required.</p>
+                </div>
+                <a class="btn btn-light" th:href="@{/students}">
+                    ← Back to Students
+                </a>
             </div>
 
             <form th:action="@{/students/update/{id}(id=${studentDTO.id})}"
-                  th:object="${studentDTO}" method="post" class="panel form-panel">
+                  th:object="${studentDTO}"
+                  method="post"
+                  class="panel form-panel"
+                  data-validate="true">
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="alert alert-error"
+                     th:if="${#fields.hasAnyErrors()}">
+                    <span>Please correct the highlighted fields.</span>
+                </div>
+
+                <div class="alert alert-error"
+                     th:if="${errorMessage != null}"
+                     th:text="${errorMessage}">
+                </div>
 
                 <h3 class="form-section-title">Personal Information</h3>
+
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Student Name *</label>
-                        <input type="text" th:field="*{name}" required>
+                        <label for="name">Student Name <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="name"
+                               type="text"
+                               th:field="*{name}"
+                               th:errorclass="is-invalid"
+                               placeholder="Enter student full name"
+                               minlength="2"
+                               maxlength="100"
+                               pattern="[a-zA-Z ]+"
+                               data-field-label="Student Name"
+                               data-msg-required="Please enter student name."
+                               data-msg-pattern="Student name can contain only letters and spaces."
+                               required>
                         <small class="field-error" th:errors="*{name}"></small>
                     </div>
+
                     <div class="form-group">
-                        <label>Roll Number *</label>
-                        <input type="text" th:field="*{rollNo}" required>
+                        <label for="rollNo">Roll Number <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="rollNo"
+                               type="text"
+                               th:field="*{rollNo}"
+                               th:errorclass="is-invalid"
+                               placeholder="Enter roll number (e.g. ST001)"
+                               minlength="1"
+                               maxlength="30"
+                               data-field-label="Roll Number"
+                               data-msg-required="Please enter roll number."
+                               required>
                         <small class="field-error" th:errors="*{rollNo}"></small>
                     </div>
-                    <select th:field="*{className}" required>
-                        <option value="">Select Class</option>
-                        <option th:each="schoolClass : ${classes}"
-                                th:value="${schoolClass.className}"
-                                th:text="${schoolClass.className}">
-                        </option>
-                    </select>
+
                     <div class="form-group">
-                        <label>Gender *</label>
-                        <select th:field="*{gender}" required>
+                        <label for="className">Class <span class="required-mark" aria-hidden="true">*</span></label>
+                        <select id="className"
+                                th:field="*{className}"
+                                th:errorclass="is-invalid"
+                                data-field-label="Class"
+                                data-msg-required="Please select a class."
+                                required>
+                            <option value="">Select Class</option>
+                            <option th:each="schoolClass : ${classes}"
+                                    th:value="${schoolClass.className}"
+                                    th:text="${schoolClass.className}">
+                            </option>
+                        </select>
+                        <small class="field-error" th:errors="*{className}"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender <span class="required-mark" aria-hidden="true">*</span></label>
+                        <select id="gender"
+                                th:field="*{gender}"
+                                th:errorclass="is-invalid"
+                                data-field-label="Gender"
+                                data-msg-required="Please select gender."
+                                required>
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -50,56 +109,135 @@
                         </select>
                         <small class="field-error" th:errors="*{gender}"></small>
                     </div>
+
                     <div class="form-group">
-                        <label>Date of Birth</label>
-                        <input type="date" th:field="*{dob}">
+                        <label for="dob">Date of Birth <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="dob"
+                               type="date"
+                               th:field="*{dob}"
+                               th:errorclass="is-invalid"
+                               title="Select date of birth"
+                               data-field-label="Date of Birth"
+                               data-date-rule="past"
+                               data-msg-required="Please select date of birth."
+                               data-msg-date="Date of birth must be in the past."
+                               required>
+                        <small class="field-error" th:errors="*{dob}"></small>
                     </div>
+
                     <div class="form-group">
-                        <label>Admission Date</label>
-                        <input type="date" th:field="*{admissionDate}">
-                    </div>
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="tel" th:field="*{phone}">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" th:field="*{email}">
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Address</label>
-                        <textarea th:field="*{address}" rows="3"></textarea>
+                        <label for="admissionDate">Admission Date <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="admissionDate"
+                               type="date"
+                               th:field="*{admissionDate}"
+                               th:errorclass="is-invalid"
+                               title="Select admission date"
+                               data-field-label="Admission Date"
+                               data-date-rule="past-or-present"
+                               data-msg-required="Please select admission date."
+                               data-msg-date="Admission date cannot be in the future."
+                               required>
+                        <small class="field-error" th:errors="*{admissionDate}"></small>
                     </div>
                 </div>
 
-                <h3 class="form-section-title">Parent & Transport Assignment</h3>
+                <h3 class="form-section-title">Contact Information</h3>
+
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Parent</label>
-                        <select th:field="*{parentId}">
-                            <option value="">Select parent</option>
+                        <label for="phone">Phone <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="phone"
+                               type="tel"
+                               th:field="*{phone}"
+                               th:errorclass="is-invalid"
+                               placeholder="Enter 10-digit mobile number"
+                               maxlength="10"
+                               inputmode="numeric"
+                               data-validate-type="phone"
+                               data-phone-mode="india-mobile"
+                               data-field-label="Phone"
+                               data-msg-required="Please enter mobile number."
+                               data-msg-pattern="Phone number must contain 10 valid digits starting with 6-9."
+                               required>
+                        <small class="field-error" th:errors="*{phone}"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input id="email"
+                               type="email"
+                               th:field="*{email}"
+                               th:errorclass="is-invalid"
+                               placeholder="Enter email address"
+                               maxlength="100"
+                               data-field-label="Email"
+                               data-msg-required="Please enter email address."
+                               data-msg-email="Please enter a valid email address."
+                               required>
+                        <small class="field-error" th:errors="*{email}"></small>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="address">Address <span class="required-mark" aria-hidden="true">*</span></label>
+                        <textarea id="address"
+                                  th:field="*{address}"
+                                  th:errorclass="is-invalid"
+                                  rows="3"
+                                  maxlength="500"
+                                  placeholder="Enter complete address"
+                                  data-field-label="Address"
+                                  data-msg-required="Please enter complete address."
+                                  required></textarea>
+                        <small class="field-error" th:errors="*{address}"></small>
+                    </div>
+                </div>
+
+                <h3 class="form-section-title">Parent &amp; Transport Assignment</h3>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="parentId">Parent <span class="required-mark" aria-hidden="true">*</span></label>
+                        <select id="parentId"
+                                th:field="*{parentId}"
+                                th:errorclass="is-invalid"
+                                data-field-label="Parent"
+                                data-msg-required="Please select a parent."
+                                required>
+                            <option value="">Select Parent</option>
                             <option th:each="parent : ${parents}"
                                     th:value="${parent.id}"
                                     th:text="${parent.fatherName + ' / ' + parent.motherName}">
                             </option>
                         </select>
+                        <small class="field-error" th:errors="*{parentId}"></small>
                     </div>
+
                     <div class="form-group">
-                        <label>School Bus</label>
-                        <select th:field="*{busId}">
-                            <option value="">Select bus</option>
+                        <label for="busId">School Bus</label>
+                        <select id="busId"
+                                th:field="*{busId}"
+                                th:errorclass="is-invalid"
+                                data-field-label="School Bus">
+                            <option value="">Select Bus (Optional)</option>
                             <option th:each="bus : ${buses}"
                                     th:value="${bus.id}"
                                     th:text="${bus.busNumber}">
                             </option>
                         </select>
+                        <small class="field-error" th:errors="*{busId}"></small>
                     </div>
+
                     <div class="form-group">
-                        <label>Active Student</label>
-                        <select th:field="*{active}">
+                        <label for="active">Active Student <span class="required-mark" aria-hidden="true">*</span></label>
+                        <select id="active"
+                                th:field="*{active}"
+                                th:errorclass="is-invalid"
+                                data-field-label="Active Status"
+                                required>
                             <option th:value="true">Active</option>
                             <option th:value="false">Inactive</option>
                         </select>
+                        <small class="field-error" th:errors="*{active}"></small>
                     </div>
                 </div>
 
@@ -109,8 +247,11 @@
                 </div>
             </form>
         </section>
+
+        <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 </div>
+
 <script th:src="@{/js/app.js}"></script>
 </body>
 </html>

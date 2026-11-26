@@ -43,7 +43,7 @@
                 <form th:action="${editingUser == null}
                         ? @{/admin/users/create}
                         : @{/admin/users/edit/{id}(id=${userForm.id})}"
-                      th:object="${userForm}" method="post">
+                      th:object="${userForm}" method="post" data-validate="true">
 
                     <input type="hidden" th:field="*{id}">
 
@@ -193,6 +193,7 @@
             </div>
 
         </section>
+            <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 </div>
 

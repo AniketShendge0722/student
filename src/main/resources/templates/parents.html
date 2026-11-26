@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -7,98 +8,334 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+
 <div class="app-layout">
+
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
     <main class="main-content">
+
         <div th:replace="~{fragments/topbar :: topbar('Parents')}"></div>
+
         <section class="page-content">
+
+            <!-- PAGE HEADING -->
             <div class="page-heading">
-                <div><h2>Parent Management</h2><p class="muted">Manage parent and guardian details.</p></div>
-                <a class="btn btn-primary" th:href="@{/parents/add}">＋ Add Parent</a>
+                <div>
+                    <h2>Parent Management</h2>
+                    <p class="muted">
+                        Manage parent and guardian details.
+                    </p>
+                </div>
+
+                <a class="btn btn-primary" th:href="@{/parents/add}">
+                    + Add Parent
+                </a>
             </div>
 
-            <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
-            <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+            <!-- SUCCESS / ERROR MESSAGES -->
+            <div class="alert alert-success"
+                 th:if="${successMessage}"
+                 th:text="${successMessage}">
+            </div>
 
-            <form method="get" th:action="@{/parents}" class="filter-bar">
-                <input type="search" name="keyword" placeholder="Search parents..."
+            <div class="alert alert-error"
+                 th:if="${errorMessage}"
+                 th:text="${errorMessage}">
+            </div>
+
+            <!-- SEARCH -->
+            <form method="get"
+                  th:action="@{/parents}"
+                  class="filter-bar">
+
+                <input type="search"
+                       name="keyword"
+                       placeholder="Search by parent name, phone or email..."
                        th:value="${keyword}">
-                <button class="btn btn-primary" type="submit">Search</button>
-                <a class="btn btn-light" th:href="@{/parents}">Reset</a>
+
+                <button class="btn btn-primary" type="submit">
+                    Search
+                </button>
+
+                <a class="btn btn-light" th:href="@{/parents}">
+                    Reset
+                </a>
+
             </form>
 
-            <section class="panel form-panel" th:if="${parentDTO != null}">
-                <h3 class="form-section-title"
-                    th:text="${parentDTO.id == null ? 'Add Parent' : 'Edit Parent'}">Parent Form</h3>
+            <!-- ADD / EDIT PARENT FORM -->
+            <section class="panel form-panel"
+                     th:if="${parentDTO != null}">
 
-                <form th:action="${parentDTO.id == null ? '/parents/save' : '/parents/update/' + parentDTO.id}"
-                      th:object="${parentDTO}" method="post">
+                <h3 class="form-section-title"
+                    th:text="${parentDTO.id == null ? 'Add Parent' : 'Edit Parent'}">
+                    Parent Form
+                </h3>
+
+                <p class="muted">
+                    Fields marked with
+                    <span class="required-mark">*</span>
+                    are required.
+                </p>
+
+                <form th:action="${parentDTO.id == null
+                                  ? '/parents/save'
+                                  : '/parents/update/' + parentDTO.id}"
+                      th:object="${parentDTO}"
+                      method="post"
+                      data-validate="true">
+
+                    <!-- FORM ERROR SUMMARY -->
+                    <div class="alert alert-error"
+                         th:if="${#fields.hasAnyErrors()}">
+                        Please correct the highlighted fields.
+                    </div>
+
                     <div class="form-grid">
+
+                        <!-- FATHER NAME -->
                         <div class="form-group">
-                            <label>Father Name</label>
-                            <input type="text" th:field="*{fatherName}" required>
-                            <small class="field-error" th:errors="*{fatherName}"></small>
+
+                            <label for="fatherName">
+                                Father Name
+                                <span class="required-mark">*</span>
+                            </label>
+
+                            <input type="text"
+                                   id="fatherName"
+                                   th:field="*{fatherName}"
+                                   th:errorclass="is-invalid"
+                                   placeholder="Enter father's full name"
+                                   minlength="2"
+                                   maxlength="100"
+                                   pattern="[a-zA-Z ]+"
+                                   data-field-label="Father Name"
+                                   data-msg-required="Please enter father's name."
+                                   data-msg-pattern="Father name can contain only letters and spaces."
+                                   required>
+
+                            <small class="field-error"
+                                   th:errors="*{fatherName}">
+                            </small>
+
                         </div>
+
+                        <!-- MOTHER NAME -->
                         <div class="form-group">
-                            <label>Mother Name</label>
-                            <input type="text" th:field="*{motherName}" required>
-                            <small class="field-error" th:errors="*{motherName}"></small>
+
+                            <label for="motherName">
+                                Mother Name
+                                <span class="required-mark">*</span>
+                            </label>
+
+                            <input type="text"
+                                   id="motherName"
+                                   th:field="*{motherName}"
+                                   th:errorclass="is-invalid"
+                                   placeholder="Enter mother's full name"
+                                   minlength="2"
+                                   maxlength="100"
+                                   pattern="[a-zA-Z ]+"
+                                   data-field-label="Mother Name"
+                                   data-msg-required="Please enter mother's name."
+                                   data-msg-pattern="Mother name can contain only letters and spaces."
+                                   required>
+
+                            <small class="field-error"
+                                   th:errors="*{motherName}">
+                            </small>
+
                         </div>
+
+                        <!-- PHONE -->
                         <div class="form-group">
-                            <label>Phone</label>
-                            <input type="tel" th:field="*{phone}" required>
-                            <small class="field-error" th:errors="*{phone}"></small>
+
+                            <label for="phone">
+                                Mobile Number
+                                <span class="required-mark">*</span>
+                            </label>
+
+                            <input type="tel"
+                                   id="phone"
+                                   th:field="*{phone}"
+                                   th:errorclass="is-invalid"
+                                   placeholder="Enter 10-digit mobile number"
+                                   maxlength="10"
+                                   inputmode="numeric"
+                                   data-validate-type="phone"
+                                   data-phone-mode="india-mobile"
+                                   data-field-label="Mobile Number"
+                                   data-msg-required="Please enter mobile number."
+                                   data-msg-pattern="Enter a valid 10-digit mobile number starting with 6-9."
+                                   required>
+
+                            <small class="field-error"
+                                   th:errors="*{phone}">
+                            </small>
+
                         </div>
+
+                        <!-- EMAIL -->
                         <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" th:field="*{email}">
-                            <small class="field-error" th:errors="*{email}"></small>
+
+                            <label for="email">
+                                Email
+                                <span class="required-mark">*</span>
+                            </label>
+
+                            <input type="email"
+                                   id="email"
+                                   th:field="*{email}"
+                                   th:errorclass="is-invalid"
+                                   placeholder="Enter parent email address"
+                                   maxlength="100"
+                                   data-field-label="Email"
+                                   data-msg-required="Please enter email address."
+                                   data-msg-email="Please enter a valid email address."
+                                   required>
+
+                            <small class="field-error"
+                                   th:errors="*{email}">
+                            </small>
+
                         </div>
+
+                        <!-- ADDRESS -->
                         <div class="form-group full-width">
-                            <label>Address</label>
-                            <textarea th:field="*{address}" rows="3"></textarea>
+
+                            <label for="address">
+                                Address
+                                <span class="required-mark">*</span>
+                            </label>
+
+                            <textarea id="address"
+                                      th:field="*{address}"
+                                      th:errorclass="is-invalid"
+                                      rows="3"
+                                      maxlength="500"
+                                      placeholder="Enter complete residential address"
+                                      data-field-label="Address"
+                                      data-msg-required="Please enter complete address."
+                                      required></textarea>
+
+                            <small class="field-error"
+                                   th:errors="*{address}">
+                            </small>
+
                         </div>
+
                     </div>
+
+                    <!-- FORM BUTTONS -->
                     <div class="form-actions">
-                        <a th:href="@{/parents}" class="btn btn-light">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save Parent</button>
+
+                        <a th:href="@{/parents}"
+                           class="btn btn-light">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-primary"
+                                th:text="${parentDTO.id == null
+                                          ? 'Save Parent'
+                                          : 'Update Parent'}">
+                            Save Parent
+                        </button>
+
                     </div>
+
                 </form>
+
             </section>
 
+            <!-- PARENT LIST -->
             <section class="panel">
+
                 <div class="table-responsive">
+
                     <table>
+
                         <thead>
-                        <tr><th>#</th><th>Father</th><th>Mother</th><th>Phone</th><th>Email</th><th>Actions</th></tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Father</th>
+                            <th>Mother</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
+
                         <tbody>
+
                         <tr th:each="parent, stat : ${parents}">
+
                             <td th:text="${stat.count}">1</td>
-                            <td th:text="${parent.fatherName}">Father</td>
-                            <td th:text="${parent.motherName}">Mother</td>
-                            <td th:text="${parent.phone}">9999999999</td>
-                            <td th:text="${parent.email}">parent@example.com</td>
+
+                            <td th:text="${parent.fatherName}">
+                                Father
+                            </td>
+
+                            <td th:text="${parent.motherName}">
+                                Mother
+                            </td>
+
+                            <td th:text="${parent.phone}">
+                                9999999999
+                            </td>
+
+                            <td th:text="${parent.email}">
+                                parent@example.com
+                            </td>
+
                             <td class="action-cell">
+
                                 <a class="btn btn-small btn-light"
-                                   th:href="@{/parents/edit/{id}(id=${parent.id})}">Edit</a>
+                                   th:href="@{/parents/edit/{id}(id=${parent.id})}">
+                                    Edit
+                                </a>
+
                                 <form th:action="@{/parents/delete/{id}(id=${parent.id})}"
-                                      method="post" class="inline-form"
+                                      method="post"
+                                      class="inline-form"
                                       onsubmit="return confirmDelete('Delete this parent?')">
-                                    <button class="btn btn-small btn-danger" type="submit">Delete</button>
+
+                                    <button class="btn btn-small btn-danger"
+                                            type="submit">
+                                        Delete
+                                    </button>
+
                                 </form>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(parents)}">
+                            <td colspan="6" class="empty-state">
+                                No parent records found.
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(parents)}">
-                            <td colspan="6" class="empty-state">No parent records found.</td>
-                        </tr>
+
                         </tbody>
+
                     </table>
+
                 </div>
+
             </section>
+
         </section>
+
+        <!-- REUSABLE DEVELOPER FOOTER -->
+        <div th:replace="~{fragments/footer :: developerFooter}"></div>
+
     </main>
+
 </div>
+
 <script th:src="@{/js/app.js}"></script>
+
 </body>
 </html>

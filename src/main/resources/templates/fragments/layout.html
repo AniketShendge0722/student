@@ -26,40 +26,7 @@
         <section class="page-content">
             <div th:replace="${content}"></div>
         </section>
-
-        <footer class="developer-footer">
-            <div class="developer-footer-content">
-
-                <div class="developer-footer-brand">
-                    <strong>SchoolTrack</strong>
-                    <span>Student Management System</span>
-                </div>
-
-                <div class="developer-footer-credit">
-                    <span>Designed &amp; Developed by</span>
-                    <strong>Aniket Shendge</strong>
-                    <small>Java Developer | Spring Boot | MySQL | Web Development</small>
-                </div>
-
-                <div class="developer-footer-contact">
-                    <a href="mailto:aniketshedge50@gmail.com">
-                        <i class="fa-solid fa-envelope"></i>
-                        aniketshedge50@gmail.com
-                    </a>
-
-                    <a href="tel:+918466071140">
-                        <i class="fa-solid fa-phone"></i>
-                        +91 84660 71140
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="developer-footer-bottom">
-                <span>&copy; 2026 SchoolTrack. All rights reserved.</span>
-                <span>Built with Java &amp; Spring Boot</span>
-            </div>
-        </footer>
+        <div th:replace="~{fragments/footer :: developerFooter}"></div>
 
     </main>
 </div>

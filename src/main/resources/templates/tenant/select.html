@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Select School | SchoolTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <style>
         * {
@@ -18,7 +19,8 @@
             padding: 30px 15px;
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: stretch;
             justify-content: center;
             font-family: Arial, sans-serif;
             background: #f3f6fb;
@@ -26,6 +28,7 @@
 
         .container {
             width: 100%;
+            margin: auto;
             max-width: 460px;
             padding: 30px;
             background: #ffffff;
@@ -101,7 +104,7 @@
     </style>
 </head>
 
-<body>
+<body class="tenant-select-page">
 
 <div class="container">
 
@@ -124,11 +127,11 @@
 
     <div th:if="${not #lists.isEmpty(tenants)}">
 
-        <form th:action="@{/tenant/select}" method="post">
+        <form th:action="@{/tenant/select}" method="post" data-validate="true">
 
             <label for="tenantId">Available Schools</label>
 
-            <select id="tenantId" name="tenantId" required>
+            <select id="tenantId" name="tenantId" required data-field-label="School">
 
                 <option value="">-- Select School --</option>
 
@@ -139,6 +142,7 @@
                 </option>
 
             </select>
+            <small class="field-error" data-error-for="tenantId"></small>
 
             <button type="submit">
                 Continue
@@ -158,5 +162,7 @@
 
 </div>
 
+<div th:replace="~{fragments/footer :: developerFooter}"></div>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

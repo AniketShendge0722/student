@@ -1,3 +1,4 @@
+
 package student.mgt.controller;
 
 import jakarta.validation.Valid;
@@ -42,6 +43,8 @@ public class ParentController {
 
         model.addAttribute("parentDTO", new ParentDTO());
 
+        loadParentList(model, null);
+
         return "parents";
     }
 
@@ -54,15 +57,13 @@ public class ParentController {
 
         if (bindingResult.hasErrors()) {
 
-            model.addAttribute(
-                    "parents",
-                    parentService.findAll()
-            );
+            loadParentList(model, null);
 
             return "parents";
         }
 
         try {
+
             parentService.save(parentDTO);
 
             redirectAttributes.addFlashAttribute(
@@ -74,8 +75,12 @@ public class ParentController {
 
         } catch (RuntimeException ex) {
 
-            model.addAttribute("errorMessage", ex.getMessage());
-            model.addAttribute("parents", parentService.findAll());
+            model.addAttribute(
+                    "errorMessage",
+                    ex.getMessage()
+            );
+
+            loadParentList(model, null);
 
             return "parents";
         }
@@ -91,7 +96,7 @@ public class ParentController {
                 parentService.findById(id)
         );
 
-        model.addAttribute("parents", parentService.findAll());
+        loadParentList(model, null);
 
         return "parents";
     }
@@ -106,12 +111,13 @@ public class ParentController {
 
         if (bindingResult.hasErrors()) {
 
-            model.addAttribute("parents", parentService.findAll());
+            loadParentList(model, null);
 
             return "parents";
         }
 
         try {
+
             parentService.update(id, parentDTO);
 
             redirectAttributes.addFlashAttribute(
@@ -123,8 +129,12 @@ public class ParentController {
 
         } catch (RuntimeException ex) {
 
-            model.addAttribute("errorMessage", ex.getMessage());
-            model.addAttribute("parents", parentService.findAll());
+            model.addAttribute(
+                    "errorMessage",
+                    ex.getMessage()
+            );
+
+            loadParentList(model, null);
 
             return "parents";
         }
@@ -136,6 +146,7 @@ public class ParentController {
             RedirectAttributes redirectAttributes) {
 
         try {
+
             parentService.deleteById(id);
 
             redirectAttributes.addFlashAttribute(
@@ -152,5 +163,16 @@ public class ParentController {
         }
 
         return "redirect:/parents";
+    }
+
+    private void loadParentList(Model model, String keyword) {
+
+        model.addAttribute(
+                "parents",
+                parentService.searchParents(keyword)
+        );
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalParents", parentService.count());
     }
 }

@@ -31,7 +31,7 @@
                 <h3 class="form-section-title"
                     th:text="${busDTO.id == null ? 'Add Bus' : 'Edit Bus'}">Bus Form</h3>
                 <form th:action="${busDTO.id == null ? '/buses/save' : '/buses/update/' + busDTO.id}"
-                      th:object="${busDTO}" method="post">
+                      th:object="${busDTO}" method="post" data-validate="true">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Bus Registration Number *</label>
@@ -41,26 +41,27 @@
                         </div>
                         <div class="form-group">
                             <label>Driver Name *</label>
-                            <input type="text" th:field="*{driverName}" required>
+                            <input type="text" th:field="*{driverName}" required placeholder="Enter driver full name">
                             <small class="field-error" th:errors="*{driverName}"></small>
                         </div>
                         <div class="form-group">
                             <label>Driver Phone *</label>
-                            <input type="tel" th:field="*{driverPhone}" required>
+                            <input type="tel" th:field="*{driverPhone}" required placeholder="Enter 10-digit driver mobile number">
                             <small class="field-error" th:errors="*{driverPhone}"></small>
                         </div>
                         <div class="form-group">
                             <label>Capacity *</label>
-                            <input type="number" min="1" th:field="*{capacity}" required>
+                            <input type="number" min="1" th:field="*{capacity}" required placeholder="Enter bus seating capacity">
                             <small class="field-error" th:errors="*{capacity}"></small>
                         </div>
                         <div class="form-group">
                             <label>Route</label>
-                            <select th:field="*{routeId}">
+                            <select th:field="*{routeId}" required>
                                 <option value="">Select route</option>
                                 <option th:each="route : ${routes}"
                                         th:value="${route.id}" th:text="${route.routeName}"></option>
                             </select>
+                            <small class="field-error" th:errors="*{routeId}"></small>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -102,6 +103,7 @@
                 </div>
             </section>
         </section>
+            <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 </div>
 <script th:src="@{/js/app.js}"></script>

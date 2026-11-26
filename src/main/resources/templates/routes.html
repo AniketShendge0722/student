@@ -31,29 +31,30 @@
                 <h3 class="form-section-title"
                     th:text="${routeDTO.id == null ? 'Add Route' : 'Edit Route'}">Route Form</h3>
                 <form th:action="${routeDTO.id == null ? '/routes/save' : '/routes/update/' + routeDTO.id}"
-                      th:object="${routeDTO}" method="post">
+                      th:object="${routeDTO}" method="post" data-validate="true">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Route Name *</label>
-                            <input type="text" th:field="*{routeName}" required>
+                            <input type="text" th:field="*{routeName}" required placeholder="Enter route name">
                             <small class="field-error" th:errors="*{routeName}"></small>
                         </div>
                         <div class="form-group">
                             <label>Starting Point *</label>
-                            <input type="text" th:field="*{startPoint}" required>
+                            <input type="text" th:field="*{startPoint}" required placeholder="Enter route starting point">
                         </div>
                         <div class="form-group">
                             <label>Ending Point *</label>
-                            <input type="text" th:field="*{endPoint}" required>
+                            <input type="text" th:field="*{endPoint}" required placeholder="Enter route destination">
                         </div>
                         <div class="form-group">
                             <label>Distance (km)</label>
-                            <input type="number" min="0" step="0.1" th:field="*{distanceKm}">
+                            <input type="number" min="0" step="0.1" th:field="*{distanceKm}" placeholder="Enter distance in kilometres">
                         </div>
                         <div class="form-group full-width">
                             <label>Stops</label>
-                            <textarea th:field="*{stops}" rows="3"
-                                      placeholder="Enter stops separated by commas"></textarea>
+                            <textarea th:field="*{stops}" rows="3" maxlength="1000"
+                                      placeholder="Enter stops separated by commas" required></textarea>
+                            <small class="field-error" th:errors="*{stops}"></small>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -95,6 +96,7 @@
                 </div>
             </section>
         </section>
+            <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 </div>
 <script th:src="@{/js/app.js}"></script>

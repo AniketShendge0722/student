@@ -41,7 +41,7 @@
 
                     <form th:action="${formAction}"
                           th:object="${tenantForm}"
-                          method="post">
+                          method="post" data-validate="true">
 
                         <input type="hidden" th:field="*{id}">
 
@@ -170,6 +170,7 @@
 
         </section>
 
+            <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 </div>
 

@@ -39,7 +39,7 @@
 
             <section class="panel form-panel">
 
-                <form th:action="@{${formAction}}" method="post">
+                <form th:action="@{${formAction}}" method="post" data-validate="true">
 
                     <div class="form-grid">
 
@@ -93,6 +93,7 @@
 
         </section>
 
+            <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 
 </div>

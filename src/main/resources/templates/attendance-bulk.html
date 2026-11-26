@@ -193,7 +193,7 @@
                 <form method="post"
                       th:action="@{/attendance/bulk/save}"
                       th:object="${bulkDTO}"
-                      id="bulkAttendanceForm">
+                      id="bulkAttendanceForm" data-validate="true">
 
                     <input type="hidden"
                            th:field="*{date}">
@@ -342,6 +342,7 @@
 
         </section>
 
+            <div th:replace="~{fragments/footer :: developerFooter}"></div>
     </main>
 
 </div>
